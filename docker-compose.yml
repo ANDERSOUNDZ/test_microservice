@@ -2,42 +2,27 @@ services:
   db:
     image: postgres:15
     container_name: postgres_db
-    restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: root123*
       POSTGRES_DB: task_management_db
     ports:
       - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d task_management_db"]
       interval: 5s
       timeout: 5s
       retries: 5
 
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin_ui
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: root123*
-    ports:
-      - "5050:80"
-    depends_on:
-      db:
-        condition: service_healthy
-
   user-service:
     build: 
-      context: ./user_microservice
+      context: ./microservices/user_infrastructure
       dockerfile: Dockerfile
     container_name: user_api
     volumes:
-      - ./user_microservice:/app
-    command: dotnet watch run --non-interactive --urls http://0.0.0.0:8080
+      - ./microservices/user_infrastructure:/src
+    # Ejecutamos watch sobre el proyecto WebApi
+    command: dotnet watch --project /src/user_service.webapi/user_service.webapi.csproj run --non-interactive --urls http://0.0.0.0:8080
     environment:
       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=task_management_db;Username=postgres;Password=root123*
       - ASPNETCORE_ENVIRONMENT=Development
@@ -50,19 +35,16 @@ services:
 
   item-service:
     build: 
-      context: ./item_microservice
+      context: ./microservices/item_infrastructure
       dockerfile: Dockerfile
     container_name: item_api
-    # --- HOT RELOAD ---
     volumes:
-      - ./item_microservice:/app
-    command: dotnet watch run --non-interactive --urls http://0.0.0.0:8080
-    # ------------------
+      - ./microservices/item_infrastructure:/src
+    command: dotnet watch --project /src/item_service.webapi/item_service.webapi.csproj run --non-interactive --urls http://0.0.0.0:8080
     environment:
       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=task_management_db;Username=postgres;Password=root123*
       - ASPNETCORE_ENVIRONMENT=Development
       - DOTNET_USE_POLLING_FILE_WATCHER=1
-      - ServiceUrls__UserService=http://user-service:8080
     ports:
       - "5002:8080"
     depends_on:
@@ -78,7 +60,6 @@ services:
       - ./angular_frontend:/app
       - /app/node_modules
     command: npm run start -- --host 0.0.0.0 --poll 2000
-    # --------------------------
     ports:
       - "4200:4200"
     depends_on:
@@ -86,6 +67,18 @@ services:
         condition: service_started
       item-service:
         condition: service_started
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_ui
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root123*
+    ports:
+      - "5050:80"
+    depends_on:
+      db:
+        condition: service_healthy
 
 volumes:
   postgres_data:
