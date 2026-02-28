@@ -1,0 +1,48 @@
+# ============================================
+# .NET (Microservicios)
+# ============================================
+**/bin/
+**/obj/
+**/[Dd]ebug/
+**/[Rr]elease/
+*.user
+*.userosscache
+*.sln.docstates
+.vs/
+.vscode/
+
+# ============================================
+# Node / Angular (Frontend)
+# ============================================
+**/node_modules/
+**/dist/
+**/.angular/cache/
+**/.sass-cache/
+npm-debug.log*
+yarn-error.log*
+testem.log
+/coverage/
+
+# ============================================
+# Docker
+# ============================================
+.dockerignore
+**/docker-compose.override.yml
+# Descomenta la siguiente línea si usas secretos en archivos .env
+# .env
+
+# ============================================
+# IDEs y Editores
+# ============================================
+.idea/
+*.suo
+*.user
+*.sln.docstates
+*.sublime-workspace
+.history/
+
+# ============================================
+# Sistema Operativo
+# ============================================
+.DS_Store
+Thumbs.db
