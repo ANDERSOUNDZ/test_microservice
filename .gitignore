@@ -1,6 +1,4 @@
-# ============================================
-# .NET (Microservicios)
-# ============================================
+
 **/bin/
 **/obj/
 **/[Dd]ebug/
@@ -11,9 +9,6 @@
 .vs/
 .vscode/
 
-# ============================================
-# Node / Angular (Frontend)
-# ============================================
 **/node_modules/
 **/dist/
 **/.angular/cache/
@@ -23,17 +18,10 @@ yarn-error.log*
 testem.log
 /coverage/
 
-# ============================================
-# Docker
-# ============================================
+
 .dockerignore
 **/docker-compose.override.yml
-# Descomenta la siguiente línea si usas secretos en archivos .env
-# .env
 
-# ============================================
-# IDEs y Editores
-# ============================================
 .idea/
 *.suo
 *.user
@@ -41,8 +29,5 @@ testem.log
 *.sublime-workspace
 .history/
 
-# ============================================
-# Sistema Operativo
-# ============================================
 .DS_Store
 Thumbs.db
