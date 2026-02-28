@@ -1,4 +1,4 @@
-namespace item_microservice
+namespace user_service.webapi
 {
     public class WeatherForecast
     {

@@ -1,0 +1,91 @@
+services:
+  db:
+    image: postgres:15
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root123*
+      POSTGRES_DB: task_management_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d task_management_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_ui
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root123*
+    ports:
+      - "5050:80"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  user-service:
+    build: 
+      context: ./user_microservice
+      dockerfile: Dockerfile
+    container_name: user_api
+    volumes:
+      - ./user_microservice:/app
+    command: dotnet watch run --non-interactive --urls http://0.0.0.0:8080
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=task_management_db;Username=postgres;Password=root123*
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DOTNET_USE_POLLING_FILE_WATCHER=1
+    ports:
+      - "5001:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  item-service:
+    build: 
+      context: ./item_microservice
+      dockerfile: Dockerfile
+    container_name: item_api
+    # --- HOT RELOAD ---
+    volumes:
+      - ./item_microservice:/app
+    command: dotnet watch run --non-interactive --urls http://0.0.0.0:8080
+    # ------------------
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=task_management_db;Username=postgres;Password=root123*
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DOTNET_USE_POLLING_FILE_WATCHER=1
+      - ServiceUrls__UserService=http://user-service:8080
+    ports:
+      - "5002:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  angular-web:
+    build: 
+      context: ./angular_frontend
+      dockerfile: Dockerfile
+    container_name: angular_app
+    volumes:
+      - ./angular_frontend:/app
+      - /app/node_modules
+    command: npm run start -- --host 0.0.0.0 --poll 2000
+    # --------------------------
+    ports:
+      - "4200:4200"
+    depends_on:
+      user-service:
+        condition: service_started
+      item-service:
+        condition: service_started
+
+volumes:
+  postgres_data:
