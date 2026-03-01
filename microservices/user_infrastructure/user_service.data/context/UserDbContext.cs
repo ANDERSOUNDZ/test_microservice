@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using user_service.domain.entities;
 
 namespace user_service.data.context
 {
@@ -6,7 +7,7 @@ namespace user_service.data.context
     {
         public UserDbContext(DbContextOptions<UserDbContext> options) : base(options) { }
 
-        //public DbSet<UserEntity> Transactions => Set<UserEntity>();
+        public DbSet<UsuarioEntity> Usuarios => Set<UsuarioEntity>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

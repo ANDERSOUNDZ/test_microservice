@@ -1,10 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
 namespace user_service.data.context
 {
-    internal class UserDbContextFactory : IDesignTimeDbContextFactory<UserDbContext>
+    internal class UserDbContextFactory
     {
         public UserDbContext CreateDbContext(string[] args)
         {

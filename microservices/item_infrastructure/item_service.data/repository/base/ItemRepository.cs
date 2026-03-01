@@ -1,5 +1,4 @@
 ﻿using item_service.data.context;
-using Microsoft.EntityFrameworkCore;
 
 namespace item_service
 {

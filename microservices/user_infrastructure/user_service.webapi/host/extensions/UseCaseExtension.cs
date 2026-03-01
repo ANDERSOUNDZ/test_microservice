@@ -4,7 +4,7 @@
     {
         public static IServiceCollection AddUseCases(this IServiceCollection services)
         {
-            //services.AddScoped<IUserUseCase, UserUseCase>();
+            services.AddScoped<IUserUseCase, UserUseCase>();
             return services;
         }
     }

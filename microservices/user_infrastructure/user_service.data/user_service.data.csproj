@@ -25,4 +25,13 @@
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.3" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\user_service.domain\user_service.domain.csproj" />
+	  <ProjectReference Include="..\user_service.ports\user_service.ports.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="migration\" />
+	</ItemGroup>
+
 </Project>

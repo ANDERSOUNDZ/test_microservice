@@ -52,7 +52,6 @@ services:
     container_name: user_api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      # Conecta a db-users y la base user_db
       - ConnectionStrings__DefaultConnection=Host=db-users;Port=5432;Database=user_db;Username=postgres;Password=root123*
     ports:
       - "5001:8080"
@@ -67,7 +66,6 @@ services:
     container_name: item_api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      # Conecta a db-items y la base item_db
       - ConnectionStrings__DefaultConnection=Host=db-items;Port=5432;Database=item_db;Username=postgres;Password=root123*
     ports:
       - "5002:8080"

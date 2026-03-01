@@ -7,8 +7,14 @@
   </PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="FluentValidation" Version="12.1.1" />
+		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.13" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.13" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.13">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.13" />
 
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.3" />
@@ -16,6 +22,7 @@
 	</ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\user_service.application\user_service.application.csproj" />
     <ProjectReference Include="..\user_service.data\user_service.data.csproj" />
     <ProjectReference Include="..\user_service.ports\user_service.ports.csproj" />
   </ItemGroup>
