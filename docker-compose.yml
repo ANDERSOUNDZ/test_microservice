@@ -1,23 +1,32 @@
 services:
-  # Base de Datos PostgreSQL
   db:
     image: postgres:15
     container_name: postgres_db
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: root123*
+      POSTGRES_PASSWORD: "root123*"
       POSTGRES_DB: task_management_db
     ports:
       - "5432:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d task_management_db"]
-      interval: 5s
+      interval: 10s
       timeout: 5s
       retries: 5
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  # Microservicio de Usuarios
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_container
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+
   user-service:
     build: 
       context: ./microservices/user_infrastructure
@@ -25,15 +34,14 @@ services:
     container_name: user_api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      # IMPORTANTE: Host=db porque es el nombre del servicio arriba
       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=task_management_db;Username=postgres;Password=root123*
     ports:
       - "5001:8080"
-    # Sin volúmenes de código para evitar el error "DLL not found" (145)
     depends_on:
       db:
         condition: service_healthy
 
-  # Microservicio de Items
   item-service:
     build: 
       context: ./microservices/item_infrastructure
@@ -48,7 +56,6 @@ services:
       db:
         condition: service_healthy
 
-  # API Gateway (YARP)
   api-gateway:
     build:
       context: ./microservices/gateway_infrastructure
@@ -64,7 +71,6 @@ services:
       - user-service
       - item-service
 
-  # Frontend Angular (Servido con Nginx para máxima velocidad)
   angular-web:
     build:
       context: ./angular_frontend
