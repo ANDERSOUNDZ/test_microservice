@@ -1,20 +1,37 @@
 services:
-  db:
+  # Base de Datos para Usuarios
+  db-users:
     image: postgres:15
-    container_name: postgres_db
+    container_name: postgres_users
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: "root123*"
-      POSTGRES_DB: task_management_db
+      POSTGRES_DB: user_db
     ports:
-      - "5432:5432"
+      - "5433:5432" # Puerto diferente para acceso local
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d task_management_db"]
-      interval: 10s
-      timeout: 5s
+      test: ["CMD-SHELL", "pg_isready -U postgres -d user_db"]
+      interval: 5s
       retries: 5
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - users_data:/var/lib/postgresql/data
+
+  # Base de Datos para Items
+  db-items:
+    image: postgres:15
+    container_name: postgres_items
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "root123*"
+      POSTGRES_DB: item_db
+    ports:
+      - "5434:5432" # Puerto diferente para acceso local
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d item_db"]
+      interval: 5s
+      retries: 5
+    volumes:
+      - items_data:/var/lib/postgresql/data
 
   pgadmin:
     image: dpage/pgadmin4
@@ -25,7 +42,8 @@ services:
     ports:
       - "5050:80"
     depends_on:
-      - db
+      - db-users
+      - db-items
 
   user-service:
     build: 
@@ -34,12 +52,12 @@ services:
     container_name: user_api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      # IMPORTANTE: Host=db porque es el nombre del servicio arriba
-      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=task_management_db;Username=postgres;Password=root123*
+      # Conecta a db-users y la base user_db
+      - ConnectionStrings__DefaultConnection=Host=db-users;Port=5432;Database=user_db;Username=postgres;Password=root123*
     ports:
       - "5001:8080"
     depends_on:
-      db:
+      db-users:
         condition: service_healthy
 
   item-service:
@@ -49,11 +67,12 @@ services:
     container_name: item_api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=task_management_db;Username=postgres;Password=root123*
+      # Conecta a db-items y la base item_db
+      - ConnectionStrings__DefaultConnection=Host=db-items;Port=5432;Database=item_db;Username=postgres;Password=root123*
     ports:
       - "5002:8080"
     depends_on:
-      db:
+      db-items:
         condition: service_healthy
 
   api-gateway:
@@ -82,4 +101,5 @@ services:
       - api-gateway
 
 volumes:
-  postgres_data:
+  users_data:
+  items_data:

@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using item_service.ports.dto.item;
+using item_service.ports.shared.enums;
+using item_service.webapi.adapters.input.filters;
+using Microsoft.AspNetCore.Mvc;
 
 namespace item_service.webapi.adapters.input.controllers.Items
 {
@@ -6,14 +9,54 @@ namespace item_service.webapi.adapters.input.controllers.Items
     [ApiController]
     public class ItemController : BaseController
     {
-        /*
+        
         private readonly IItemUseCase _executor;
         public ItemController(IItemUseCase executor)
         {
             _executor = executor;
         }
-        */
-        [HttpGet("test")]
-        public IActionResult Get() => Ok(new { Message = "Hola desde el Microservicio de Item" });
+        [HttpPost("asignar")]
+        [ServiceFilter(typeof(ValidationFilter<CrearItemRequest>))]
+        public async Task<IActionResult> CrearItem([FromBody] CrearItemRequest request)
+        {
+            try
+            {
+                await _executor.ExecuteAsync(request);
+                return OkResponse(true, ApiMessage.OperationSuccess);
+            }
+            catch (Exception ex)
+            {
+                return InternalErrorResponse(ex);
+            }
+        }
+
+        [HttpPatch("completar")]
+        [ServiceFilter(typeof(ValidationFilter<CompletarItemRequest>))]
+        public async Task<IActionResult> CompletarItem([FromBody] CompletarItemRequest request)
+        {
+            try
+            {
+                await _executor.ExecuteAsync(request);
+                return OkResponse(true, ApiMessage.OperationSuccess);
+            }
+            catch (Exception ex)
+            {
+                return InternalErrorResponse(ex);
+            }
+        }
+
+        [HttpGet("pendientes/{username}")]
+        public async Task<IActionResult> ListarPendientes(string username)
+        {
+            try
+            {
+                var data = await _executor.ExecuteAsync(username);
+                return OkResponse(data, ApiMessage.OperationSuccess);
+            }
+            catch (Exception ex)
+            {
+                return InternalErrorResponse(ex);
+            }
+        }
     }
 }
