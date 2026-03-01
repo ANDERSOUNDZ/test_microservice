@@ -1,1 +1,13 @@
-<Solution />
+<Solution>
+  <Project Path="microservices/gateway_infrastructure/gateway_service/gateway_service.csproj" Id="efbd5b58-61d8-4177-be4e-832f91beac49" />
+  <Project Path="microservices/item_infrastructure/item_service.application/item_service.application.csproj" Id="d1da30d8-02f5-4a54-b73c-dc9187ff0ade" />
+  <Project Path="microservices/item_infrastructure/item_service.data/item_service.data.csproj" Id="75e7259a-6a02-45c2-9973-87269ce480ae" />
+  <Project Path="microservices/item_infrastructure/item_service.domain/item_service.domain.csproj" Id="28a41f4e-a970-4634-a58f-e28651f63a74" />
+  <Project Path="microservices/item_infrastructure/item_service.ports/item_service.ports.csproj" Id="0eeb55e5-760b-44bd-b4df-eeaa017eb5ff" />
+  <Project Path="microservices/item_infrastructure/item_service.webapi/item_service.webapi.csproj" Id="f38bbb57-0fa5-415f-ba5b-75ae8c26d481" />
+  <Project Path="microservices/user_infrastructure/user_service.application/user_service.application.csproj" Id="de1938a1-fdc5-4c69-8c59-c9462e9a5c1e" />
+  <Project Path="microservices/user_infrastructure/user_service.data/user_service.data.csproj" Id="b98aacdc-943b-465d-980f-08197cd7a889" />
+  <Project Path="microservices/user_infrastructure/user_service.domain/user_service.domain.csproj" Id="e08215c7-56a8-417d-8db7-72da51549231" />
+  <Project Path="microservices/user_infrastructure/user_service.ports/user_service.ports.csproj" Id="c71cd6ce-ca98-4f7d-9693-6878b6fea52a" />
+  <Project Path="microservices/user_infrastructure/user_service.webapi/user_service.webapi.csproj" Id="3b3b3121-b827-4c2a-930a-ed1b3c5bf544" />
+</Solution>
