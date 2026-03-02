@@ -41,5 +41,26 @@ namespace user_service.webapi.adapters.input.controllers.user
                 return InternalErrorResponse(ex);
             }
         }
+        [HttpPut("editar")]
+        public async Task<IActionResult> Editar([FromBody] EditarUsuarioRequest request)
+        {
+            try
+            {
+                await _executor.ExecuteAsync(request);
+                return OkResponse(true, ApiMessage.OperationSuccess);
+            }
+            catch (Exception ex) { return InternalErrorResponse(ex); }
+        }
+
+        [HttpDelete("eliminar/{username}")]
+        public async Task<IActionResult> Eliminar(string username)
+        {
+            try
+            {
+                await _executor.ExecuteAsync(username);
+                return OkResponse(true, ApiMessage.OperationSuccess);
+            }
+            catch (Exception ex) { return BadRequestResponse(ApiMessage.BadRequest, ex.Message); }
+        }
     }
 }

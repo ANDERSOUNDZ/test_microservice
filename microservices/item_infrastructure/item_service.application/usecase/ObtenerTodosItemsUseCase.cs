@@ -13,7 +13,8 @@ namespace item_service
                 x.Titulo,
                 x.FechaEntrega.ToString("yyyy-MM-dd"),
                 x.EsAltaRelevancia,
-                x.UsuarioAsignado
+                x.UsuarioAsignado,
+                x.Estado
                 )).ToList();
         }
     }

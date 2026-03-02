@@ -1,14 +1,14 @@
-﻿namespace item_service.webapi.host.extensions
+﻿namespace user_service.webapi.host.extensions
 {
     public static class HttpClientExtension
     {
         public static IServiceCollection AddExternalClients(this IServiceCollection services, IConfiguration config)
         {
-            var userUrl = config["ExternalServices:UserServiceUrl"] ?? "http://user_api:8080/";
+            var itemUrl = config["ExternalServices:ItemServiceUrl"] ?? "http://item_api:8080/";
 
-            services.AddHttpClient<IUserClient, UserClient>(client =>
+            services.AddHttpClient<IItemClient, ItemClient>(client =>
             {
-                client.BaseAddress = new Uri(userUrl);
+                client.BaseAddress = new Uri(itemUrl);
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
             });
             return services;

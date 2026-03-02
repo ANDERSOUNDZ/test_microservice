@@ -7,5 +7,8 @@ namespace user_service
         Task<List<UsuarioEntity>> ObtenerTodosAsync();
         Task GuardarUsuarioAsync(UsuarioEntity usuario);
         Task<bool> ExisteUsernameAsync(string username);
+        Task<UsuarioEntity?> ObtenerPorUsernameAsync(string username);
+        Task ActualizarUsuarioAsync(UsuarioEntity usuario);
+        Task EliminarUsuarioAsync(UsuarioEntity usuario);
     }
 }

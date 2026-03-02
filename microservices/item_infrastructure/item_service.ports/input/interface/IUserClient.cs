@@ -2,6 +2,6 @@
 {
     public partial interface IUserClient
     {
-        Task<List<string>> ObtenerUsernamesDisponiblesAsync();
+        Task<List<string>> ObtenerUsernamesDisponibles();
     }
 }

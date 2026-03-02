@@ -12,6 +12,7 @@ namespace user_service.webapi.host
             services.AddSwaggerDocumentation();
             services.AddRepositories();
             services.AddUseCases();
+            services.AddExternalClients(config);
             services.AddValidators();
             services.AddControllers();
             return builder;

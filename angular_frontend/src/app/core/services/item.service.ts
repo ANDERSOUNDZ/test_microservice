@@ -32,14 +32,21 @@ export class ItemService {
 
   asignarItem(request: CrearItemRequest) {
     return this.http.post<ApiResponse<string>>(`${this.baseUrl}/asignar`, request).pipe(
-      tap((res) => {
-        if (res.success) {
-          const mensajeCompleto = `${res.message}: ${res.data}`;
-          this.notify.show(mensajeCompleto, true);
-          this.listarTodos();
-        } else {
-          this.notify.show(res.message, false);
-        }
+      tap({
+        next: (res) => {
+          if (res.success) {
+            const mensajeCompleto = `${res.message}: ${res.data}`;
+            this.notify.show(mensajeCompleto, true);
+            this.listarTodos();
+          }
+        },
+        error: (err) => {
+          const apiRes = err.error as ApiResponse<any>;
+
+          const msgError = apiRes?.message || 'No se pudo asignar la tarea';
+
+          this.notify.show(msgError, false);
+        },
       }),
     );
   }

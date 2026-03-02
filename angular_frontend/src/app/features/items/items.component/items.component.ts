@@ -38,8 +38,14 @@ export class ItemsComponent implements OnInit {
         item.usuarioAsignado.toLowerCase().includes(texto),
     );
 
+    const ordenados = filtrados.sort((a, b) => {
+      if (a.estado === 'Pendiente' && b.estado === 'Completado') return -1;
+      if (a.estado === 'Completado' && b.estado === 'Pendiente') return 1;
+      return 0;
+    });
+
     const inicio = (this.paginaActual() - 1) * this.itemsPorPagina;
-    return filtrados.slice(inicio, inicio + this.itemsPorPagina);
+    return ordenados.slice(inicio, inicio + this.itemsPorPagina);
   });
 
   totalPaginas = computed(() => {

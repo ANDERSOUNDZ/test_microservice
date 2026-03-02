@@ -8,7 +8,7 @@ namespace item_service
         public async Task<string> ExecuteAsync(CrearItemRequest request)
         {
             var cargaLocal = await _itemRepository.ObtenerCargaTrabajoUsuariosAsync();
-            var todosLosUsernames = await _userClient.ObtenerUsernamesDisponiblesAsync();
+            var todosLosUsernames = await _userClient.ObtenerUsernamesDisponibles();
 
             var cargaTotalParaAlgoritmo = todosLosUsernames.Select(username => {
                 var carga = cargaLocal.FirstOrDefault(c => c.Username == username);
@@ -39,18 +39,19 @@ namespace item_service
         {
             if (!usuarios.Any()) throw new Exception("No hay usuarios disponibles.");
 
-            bool esUrgente = (item.FechaEntrega - DateTime.Now).TotalDays < 3;
-            if (esUrgente)
-            {
-                return usuarios.OrderBy(u => u.TotalPendientes).First().Username;
-            }
+            var candidatosNoSaturados = usuarios.Where(u => u.TotalAltaRelevancia < 3).ToList();
 
-            var candidatos = usuarios.Where(u => u.TotalAltaRelevancia < 3).ToList();
-
-            if (!candidatos.Any())
+            if (!candidatosNoSaturados.Any())
                 throw new Exception("Todos los usuarios están saturados con tareas de alta relevancia.");
 
-            return candidatos.OrderBy(u => u.TotalPendientes).First().Username;
+            bool esUrgente = (item.FechaEntrega - DateTime.Now).TotalDays < 3;
+
+            if (esUrgente)
+            {
+                return candidatosNoSaturados.OrderBy(u => u.TotalPendientes).First().Username;
+            }
+
+            return candidatosNoSaturados.OrderBy(u => u.TotalPendientes).First().Username;
         }
     }
 }

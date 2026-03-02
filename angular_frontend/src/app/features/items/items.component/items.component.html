@@ -12,7 +12,7 @@
     <div class="card-body p-4">
       <div class="row g-3 align-items-end">
         <div class="col-md-5">
-          <label class="form-label fw-bold text-muted small">Título de la Tarea</label>
+          <label class="form-label fw-bold text-muted small">Nombre de la Tarea</label>
           <input
             [(ngModel)]="nuevoItem.titulo"
             class="form-control form-control-lg"
@@ -55,7 +55,7 @@
 
   <div class="row mb-3 align-items-center">
     <div class="col-md-8">
-      <h4 class="m-0 text-secondary">Monitor de Carga de Trabajo</h4>
+      <h4 class="m-0 text-secondary">Tabla de asignación de trabajo</h4>
     </div>
     <div class="col-md-4 text-end">
       <div class="input-group">
@@ -76,17 +76,25 @@
       <thead class="table-light">
         <tr>
           <th class="ps-4">Ítem de Trabajo</th>
-          <th>Responsable Asignado</th>
+          <th>Responsable</th>
           <th>Vencimiento</th>
           <th>Prioridad</th>
-          <th>Acción</th>
+          <th>Pendientes</th>
         </tr>
       </thead>
       <tbody>
         @for (item of itemsFiltrados(); track item.id) {
-          <tr>
+          <tr
+            [class.opacity-50]="item.estado === 'Completado'"
+            [class.bg-light]="item.estado === 'Completado'"
+          >
             <td class="ps-4 py-3">
-              <div class="fw-bold">{{ item.titulo }}</div>
+              <div
+                class="fw-bold"
+                [class.text-decoration-line-through]="item.estado === 'Completado'"
+              >
+                {{ item.titulo }}
+              </div>
               <small class="text-muted">ID: {{ item.id.substring(0, 8) }}...</small>
             </td>
             <td>
@@ -97,7 +105,10 @@
               </span>
             </td>
             <td>
-              <div [class.text-danger]="item.esAltaRelevancia" class="fw-semibold">
+              <div
+                [class.text-danger]="item.esAltaRelevancia && item.estado !== 'Completado'"
+                class="fw-semibold"
+              >
                 {{ item.fechaEntrega | date: 'fullDate' }}
               </div>
             </td>
@@ -106,20 +117,19 @@
                 {{ item.esAltaRelevancia ? 'ALTA' : 'BAJA' }}
               </span>
             </td>
-            <td>
-              <button
-                (click)="completar(item.id)"
-                class="btn btn-sm btn-outline-success border-2 fw-bold"
-              >
-                <i class="bi bi-check-lg"></i> Finalizar
-              </button>
-            </td>
-          </tr>
-        } @empty {
-          <tr>
-            <td colspan="4" class="text-center py-5">
-              <i class="bi bi-clipboard-x fs-1 text-muted d-block mb-3"></i>
-              <p class="text-muted h5">No hay tareas registradas en el sistema</p>
+            <td class="text-center">
+              @if (item.estado !== 'Completado') {
+                <button
+                  (click)="completar(item.id)"
+                  class="btn btn-sm btn-outline-success border-2 fw-bold"
+                >
+                  Finalizar Tarea
+                </button>
+              } @else {
+                <span class="badge rounded-pill bg-success px-3 py-2">
+                  <i class="bi bi-check-all me-1"></i> Terminado
+                </span>
+              }
             </td>
           </tr>
         }

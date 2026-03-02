@@ -10,6 +10,7 @@ export interface ItemPendienteResponse {
   fechaEntrega: Date;
   esAltaRelevancia: boolean;
   usuarioAsignado: string;
+  estado: string;
 }
 
 export interface CompletarItemRequest {

@@ -40,7 +40,6 @@ namespace item_service
         public async Task<List<ItemTrabajoEntity>> ObtenerTodosAsync()
         {
             return await _context.ItemsTrabajo
-                .Where(x => x.Estado == "Pendiente")
                 .OrderBy(x => x.UsuarioAsignado) 
                 .ThenBy(x => x.FechaEntrega)
                 .ToListAsync();

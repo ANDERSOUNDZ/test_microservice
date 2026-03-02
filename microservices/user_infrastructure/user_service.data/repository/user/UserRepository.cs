@@ -16,5 +16,20 @@ namespace user_service
 
         public async Task<bool> ExisteUsernameAsync(string username)
             => await _context.Usuarios.AnyAsync(u => u.Username == username);
+
+        public async Task<UsuarioEntity?> ObtenerPorUsernameAsync(string username)
+        => await _context.Usuarios.FirstOrDefaultAsync(u => u.Username == username);
+
+        public async Task ActualizarUsuarioAsync(UsuarioEntity usuario)
+        {
+            _context.Usuarios.Update(usuario);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task EliminarUsuarioAsync(UsuarioEntity usuario)
+        {
+            _context.Usuarios.Remove(usuario);
+            await _context.SaveChangesAsync();
+        }
     }
 }

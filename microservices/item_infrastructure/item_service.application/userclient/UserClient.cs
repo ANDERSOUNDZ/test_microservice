@@ -7,7 +7,7 @@ namespace item_service
 {
     public partial class UserClient : IUserClient
     {
-        public async Task<List<string>> ObtenerUsernamesDisponiblesAsync()
+        public async Task<List<string>> ObtenerUsernamesDisponibles()
         {
             var response = await _httpClient.GetFromJsonAsync<ApiResponse<List<UsuarioResumen>>>("listar");
 

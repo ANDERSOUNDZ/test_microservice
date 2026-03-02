@@ -16,20 +16,43 @@ export class UserService {
 
   usuarios = signal<UsuarioResponse[]>([]);
 
-  registrar(request: { username: string; nombreCompleto: string }) {
-    return this.http.post<ApiResponse<any>>(`${this.baseUrl}/registrar`, request)
-      .pipe(
-        tap(res => {
-          this.notify.show(res.message, res.success);
-          if (res.success) this.listar();
-        })
-      );
+  listar() {
+    this.http.get<ApiResponse<UsuarioResponse[]>>(`${this.baseUrl}/listar`).subscribe((res) => {
+      if (res.success) this.usuarios.set(res.data);
+    });
   }
 
-  listar() {
-    this.http.get<ApiResponse<UsuarioResponse[]>>(`${this.baseUrl}/listar`)
-      .subscribe(res => {
-        if (res.success) this.usuarios.set(res.data);
-      });
+  registrar(request: { username: string; nombreCompleto: string }) {
+    return this.http.post<ApiResponse<any>>(`${this.baseUrl}/registrar`, request).pipe(
+      tap((res) => {
+        this.notify.show(res.message, res.success);
+        if (res.success) this.listar();
+      }),
+    );
+  }
+
+  editar(request: { username: string; nuevoNombre: string }) {
+    return this.http.put<ApiResponse<any>>(`${this.baseUrl}/editar`, request).pipe(
+      tap((res) => {
+        this.notify.show(res.message, res.success);
+        if (res.success) this.listar();
+      }),
+    );
+  }
+
+  eliminar(username: string) {
+    return this.http.delete<ApiResponse<any>>(`${this.baseUrl}/eliminar/${username}`).pipe(
+      tap({
+        next: (res) => {
+          this.notify.show(res.message, res.success);
+          if (res.success) this.listar();
+        },
+        error: (err) => {
+          const apiRes = err.error as ApiResponse<any>;
+          const msgToShow = apiRes?.data || apiRes?.message || 'Error al eliminar usuario';
+          this.notify.show(msgToShow, false);
+        },
+      }),
+    );
   }
 }

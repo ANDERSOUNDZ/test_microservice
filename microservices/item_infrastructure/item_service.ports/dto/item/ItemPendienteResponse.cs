@@ -5,6 +5,7 @@
         string Titulo,
         string FechaEntrega,
         bool EsAltaRelevancia,
-        string UsuarioAsignado
+        string UsuarioAsignado,
+        string Estado
     );
 }
