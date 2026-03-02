@@ -183,6 +183,7 @@ Validaciones:
 Funcionalidades Backend
 
 - Arquitectura hexagonal, Puertos, Adaptadores, Use Case, Repositories, Fluent Validation, SOLID, Partial Clases, Injection dependency.
+
 ![2AB](./angular_frontend/public/images/C23.png)
 
 - Busca desde el servicio de items a usuarios via HTTP
@@ -196,9 +197,11 @@ Funcionalidades Backend
 ![2AB](./angular_frontend/public/images/C29.png)
 
 1. Tabla User
+
 ![2AB](./angular_frontend/public/images/C31.png)
 
 2. Tabla Item
+
 ![2AB](./angular_frontend/public/images/C30.png)
 
 - Busca que no elimine a un usuario que tiene tareas desde el servicio de user al item via HTTP
@@ -211,7 +214,9 @@ Orquestador Docker Estable
 ![2AB](./angular_frontend/public/images/C35.png)
 
 Servicios levantados: 
+
 ![2AB](./angular_frontend/public/images/C36.png)
+
 ![2AB](./angular_frontend/public/images/C37.png)
 
 Miguel Chanchay.
