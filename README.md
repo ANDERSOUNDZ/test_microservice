@@ -46,7 +46,7 @@ Ejecuta esta linea: git clone https://github.com/ANDERSOUNDZ/test_microservice.g
 2. Entra a la carpeta
 cd test_microservice
 
-Aviso: PgAdmin ya genera la base de datos automatizada, pero si no es el caso, sigue las instrucciónes de migración:
+Aviso: El docker-compose ya se encuentra configurado y genera todo el ecosistema adecuado automatizado, pero si no es el caso, sigue las instrucciónes de migración:
 - 1. Entra a la carpeta de cada proyecto microservices/item_infrastructure o microservices/user_infrastructure
 
 - 2. Ejecuta los comandos de migración para cada carpeta correspondiente:
@@ -58,6 +58,8 @@ Aviso: PgAdmin ya genera la base de datos automatizada, pero si no es el caso, s
     USER INFRASTRUCTURE:
         dotnet ef migrations add InitialCreate --project user_service.data --startup-project user_service.webapi --output-dir migration
         dotnet ef database update --project user_service.data --startup-project user_service.webapi
+
+    *Esto es solamente si no genero las tablas para cada proyecto, así generamos la migración, pero solo es por casos emergentes
  ---
 
 3. Levanta los servicios
@@ -109,7 +111,7 @@ Maintenance database: item_db
 Username: postgres
 Password: root123*
 
-![A03](./angular_frontend/public/images/C8.png) | ![A03](./angular_frontend/public/images//C9.png)
+![A03](./angular_frontend/public/images/C8.png) | ![A03](./angular_frontend/public/images/C9.png)
 
 ----
 
@@ -118,82 +120,98 @@ Frontend - Backend
 ---
 Manejo de rama - Una sola anexado en el documento
 ---
-![1A](./frontend_infrastructure/store_frontend/public/Imagenes_proyecto/A07.png)
+![1AB](./angular_frontend/public/images/C10.png)
 
 
 Funcionalidades Frontend:
 ---
-Gestión de Productos.
 
-Panel de administración que permite: Crear productos, asignar precios, descripcion y cantidad de stock, editar los productos y sus parametros, eliminar productos y ver el producto.
-Al registrar producto, se registra una transaccion de compra inicial, de igual manera al editar el producto permite agregar producto, este toma siempre la diferencia del producto ingresa y lo registra para mantener stock.
+1. Mensaje: "Todos los usuarios están saturados" (Microservicio independiente: Item)
+Este mensaje ocurre cuando la regla de saturación bloquea a todo el equipo. 
+Usuario A: Tiene 3 tareas de prioridad ALTA pendientes.
+Usuario B: Tiene 3 tareas de prioridad ALTA pendientes.
+Acción: Intentas registrar una nueva tarea (no importa si es de prioridad Alta o Baja)
+Resultado: El sistema filtra a todos los usuarios porque todos tienen TotalAltaRelevancia >= 3.
+Al quedar la lista vacía, lanza la excepción.
 
-![1A](./frontend_infrastructure/store_frontend/public/Imagenes_proyecto/A08.png)
-![1A](./frontend_infrastructure/store_frontend/public/Imagenes_proyecto/A09.png)
-![1A](./frontend_infrastructure/store_frontend/public/Imagenes_proyecto/A10.png)
-![1A](./frontend_infrastructure/store_frontend/public/Imagenes_proyecto/A11.png)
+![2AB](./angular_frontend/public/images/C11.png)
 
+2. Mensaje: "Tarea asignada exitosamente: [NombreUsuario]" (Microservicio independiente: Item)
+(Caso Urgente)Aquí validamos que la fecha manda sobre la relevancia.
+Usuario A: Tiene 5 tareas pendientes (todas de baja prioridad).
+Usuario B: Tiene 1 tarea pendiente (baja prioridad).
+Evento: Creas una tarea con Fecha de Entrega para mañana (menos de 3 días).
+Resultado: Aunque el Usuario A esté más desocupado de "alta relevancia",
+el sistema elegirá al Usuario B porque es urgente y él tiene el menor número total de pendientes ($1 < 5$).
+
+![2AB](./angular_frontend/public/images/C12.png)
+![2AB](./angular_frontend/public/images/C13.png)
+
+3. Mensaje: "Tarea asignada exitosamente: [NombreUsuario]" (Microservicio independiente: Item)
+Aquí validamos que los ítems relevantes buscan al menos cargado.
+Usuario A: Tiene 2 tareas de Alta Relevancia.
+Usuario B: Tiene 0 tareas de Alta Relevancia.
+Evento: Creas una tarea de Alta Prioridad con fecha para dentro de 15 días.
+Resultado: El sistema asignará al Usuario B.
+El sistema prefiere no estár saturado y tiene "más espacio" para dar tareas críticas antes de llegar al límite de 3.
+
+![2AB](./angular_frontend/public/images/C14.png)
+![2AB](./angular_frontend/public/images/C15.png)
+
+4. Visualización: Cambio de "Finalizar" a "Terminado"Este es el flujo para validar tu monitor de carga. (Microservicio independiente: User)
+Evento: 1.  Ubicas una tarea en la tabla (ej. "Revisar Servidores").
+2 Haces clic en el botón verde Finalizar.
+3 Aceptas el confirm de el pop up,
+Resultado: la fila cambia de finalizar tarea a Terminado refieriendose a que termino la tarea.
+
+![2AB](./angular_frontend/public/images/C16.png)
+![2AB](./angular_frontend/public/images/C17.png)
+![2AB](./angular_frontend/public/images/C18.png)
+![2AB](./angular_frontend/public/images/C19.png)
+
+5. Eventos adicionales:
+Validaciones:
+- 1. Validacion de campo para el ingreso de tarea a algun usuario
+![2AB](./angular_frontend/public/images/C20.png)
+
+- 2. Validacion para no eliminar a un usuario si tiene tareas asignadas (Microservicio independiente: User)
+![2AB](./angular_frontend/public/images/C22.png)
+
+- 3. Creación de usuario
+![2AB](./angular_frontend/public/images/C20.png)
 ---
-
-Pequeño modulo de categorias (Relacional pequeña):
-Registra, Edita, Elimina categorias para los productos.
-
-![1A](./frontend_infrastructure/store_frontend/public/Imagenes_proyecto/A12.png)
-![1A](./frontend_infrastructure/store_frontend/public/Imagenes_proyecto/A14.png)
-![1A](./frontend_infrastructure/store_frontend/public/Imagenes_proyecto/A15.png)
-
----
-
-Historial de transacciónes.
-
-Permite visualizar los registros de stock de productos, esta tabla muestra los registros de compra y venta de los productos, por cada producto que se vende o compra registra el porducto , fecha y cantidad, actualiza tanto cuando compra como vende el stock del producto.
-
-![1A](./frontend_infrastructure/store_frontend/public/Imagenes_proyecto/A16.png)
-
-Se agrego un modal que permite visualizar toda la información de la transaccion, ya sea compra o venta, mas una descarga ne pdf de esa infromación: 
-
-![1A](./frontend_infrastructure/store_frontend/public/Imagenes_proyecto/A17.png)
-
-Añadi una pequeña Dummy Store para poder hacerla interactiva, se puede comprar 1 producto o añadir otro producto.
-
-![1A](./frontend_infrastructure/store_frontend/public/Imagenes_proyecto/A18.png)
-
-Al comprar, este ejecuta la accion de registro y guarda en la tabla de transacciones mientras actualiza el stock con una clase de fabrica en la entidad. 
-
-![1A](./frontend_infrastructure/store_frontend/public/Imagenes_proyecto/A19.png)
-![1A](./frontend_infrastructure/store_frontend/public/Imagenes_proyecto/A21.png)
-
-
-En el caso de que no exista producto envia una notificacio que ya no hay cupo o no existe stock no permite la compra y se muestra una notificacion en la pantalla.
-
-![1A](./frontend_infrastructure/store_frontend/public/Imagenes_proyecto/A20.png)
-![1A](./frontend_infrastructure/store_frontend/public/Imagenes_proyecto/A23.png)
-![1A](./frontend_infrastructure/store_frontend/public/Imagenes_proyecto/A24.png)
-![1A](./frontend_infrastructure/store_frontend/public/Imagenes_proyecto/A25.png)
-
-
 Funcionalidades Backend
-- Arquitectura hexagonal, Puertos / Adaptadores, Fluent Validation, SOLID, Partial Clases, Injection dependency.
 
-![1A](./frontend_infrastructure/store_frontend/public/Imagenes_proyecto/A26.png) | ![1A](./frontend_infrastructure/store_frontend/public/Imagenes_proyecto/A27.png)
+- Arquitectura hexagonal, Puertos, Adaptadores, Use Case, Repositories, Fluent Validation, SOLID, Partial Clases, Injection dependency.
+![2AB](./angular_frontend/public/images/C23.png)
 
-- Registra transacciónes asyncronas mediante coneccion API REST /  HTTP Client
+- Busca desde el servicio de items a usuarios via HTTP
+![2AB](./angular_frontend/public/images/C24.png)
+![2AB](./angular_frontend/public/images/C25.png)
+![2AB](./angular_frontend/public/images/C26.png)
 
-![1A](./frontend_infrastructure/store_frontend/public/Imagenes_proyecto/A31.png)
+- Busca que no elimine a un usuario que tiene tareas desde el servicio de user al item via HTTP
+![2AB](./angular_frontend/public/images/C27.png)
+![2AB](./angular_frontend/public/images/C28.png)
+![2AB](./angular_frontend/public/images/C29.png)
 
-Registra transacciónes y comparten proceso y almacenan: 
+1. Tabla User
+![2AB](./angular_frontend/public/images/C31.png)
 
-1. Tabla Categoria
-![1A](./frontend_infrastructure/store_frontend/public/Imagenes_proyecto/A30.png)
-2. Tabla Productos
-![1A](./frontend_infrastructure/store_frontend/public/Imagenes_proyecto/A29.png)
-3. Tabla Transacciónes
-![1A](./frontend_infrastructure/store_frontend/public/Imagenes_proyecto/A28.png)
+2. Tabla Item
+![2AB](./angular_frontend/public/images/C30.png)
+
+- Busca que no elimine a un usuario que tiene tareas desde el servicio de user al item via HTTP
+Validaciones desde el Backend
+![2AB](./angular_frontend/public/images/C32.png)
+![2AB](./angular_frontend/public/images/C33.png)
+![2AB](./angular_frontend/public/images/C34.png)
 
 Orquestador Docker Estable
-![1A](./frontend_infrastructure/store_frontend/public/Imagenes_proyecto/A32.png)
+![2AB](./angular_frontend/public/images/C35.png)
 
 Servicios levantados: 
-![1A](./frontend_infrastructure/store_frontend/public/Imagenes_proyecto/A33.png)
+![2AB](./angular_frontend/public/images/C36.png)
+![2AB](./angular_frontend/public/images/C37.png)
 
-Es todo. :D
+Miguel Chanchay.
