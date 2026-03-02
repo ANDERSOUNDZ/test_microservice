@@ -20,6 +20,7 @@ namespace item_service.webapi.host
 
         public static WebApplication UseHexagonal(this WebApplication app)
         {
+            app.ApplyMigrations();
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger(options =>

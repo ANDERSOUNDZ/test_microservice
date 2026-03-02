@@ -16,6 +16,7 @@
 Proyectos similares:
 
 https://github.com/ANDERSOUNDZ/test_3_cli (Angular / .Net 9 )
+
 https://github.com/ANDERSOUNDZ/DOCKER_TEST1/ ( Angular / Spring boot JAVA)
 
 ---
@@ -46,27 +47,33 @@ Ejecuta esta linea: git clone https://github.com/ANDERSOUNDZ/test_microservice.g
 2. Entra a la carpeta
 cd test_microservice
 
+3. Levanta los servicios
+    Ejecuta el comando completo para construir las imágenes y levantar los contenedores en segundo plano:
+    Ejecutar esta linea para el orquestador:
+
+----
+    docker-compose up --build
+----
+
 Aviso: El docker-compose ya se encuentra configurado y genera todo el ecosistema adecuado automatizado, pero si no es el caso, sigue las instrucciónes de migración:
 - 1. Entra a la carpeta de cada proyecto microservices/item_infrastructure o microservices/user_infrastructure
 
 - 2. Ejecuta los comandos de migración para cada carpeta correspondiente:
 
     ITEM INFRASTRUCTURE:
+
         dotnet ef migrations add InitialCreate --project item_service.data --startup-project item_service.webapi --output-dir migration
+
         dotnet ef database update --project item_service.data --startup-project item_service.webapi
 
     USER INFRASTRUCTURE:
+
         dotnet ef migrations add InitialCreate --project user_service.data --startup-project user_service.webapi --output-dir migration
+        
         dotnet ef database update --project user_service.data --startup-project user_service.webapi
 
     *Esto es solamente si no genero las tablas para cada proyecto, así generamos la migración, pero solo es por casos emergentes
  ---
-
-3. Levanta los servicios
-    Ejecuta el comando completo para construir las imágenes y levantar los contenedores en segundo plano:
-    Ejecutar esta linea para el orquestador:
-
-    docker-compose up --build
 
 (Se construyen y despliegan las bases de datos, los servicios backend y el frontend ya automatizados, adjuntado dos archivos bash para desplegar migraciónes y levantar servicios.)
 ---
@@ -88,28 +95,43 @@ Configuración de PgAdmin Management SQL ( Visualizar Base de datos )
 ![A04](./angular_frontend/public/images/C5.png)
 
 Una vez que observes en la consola que los servicios están "Healthy":
+
 Abre PgAdmin en la ruta asignada: http://localhost:5050/browser/
 
 Registra las bases de datos: tal cual como esta tipado:
 ![A04](./angular_frontend/public/images/C6.png) | ![A04](./angular_frontend/public/images/C7.png)
 
 Conexión 1 (usuarios):
+---
 
 Name: Microservicio Usuarios
+
 Host name/address: db-users
+
 Port: 5433
+
 Maintenance database: user_db
+
 Username: postgres
+
 Password: root123*
 
 Conexión 2 (Items / Tareas / Tickets):
+---
 
 Name: Microservicio Items
+
 Host name/address: db-items
+
 Port: 5434
+
 Maintenance database: item_db
+
 Username: postgres
+
 Password: root123*
+
+---
 
 ![A03](./angular_frontend/public/images/C8.png) | ![A03](./angular_frontend/public/images/C9.png)
 
@@ -206,6 +228,7 @@ Funcionalidades Backend
 
 - Busca que no elimine a un usuario que tiene tareas desde el servicio de user al item via HTTP
 Validaciones desde el Backend
+
 ![2AB](./angular_frontend/public/images/C32.png)
 ![2AB](./angular_frontend/public/images/C33.png)
 ![2AB](./angular_frontend/public/images/C34.png)
