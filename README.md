@@ -86,7 +86,7 @@ Una vez que Docker termine el proceso, podrás acceder a los siguientes servicio
 |---------------|---------------------------------------------------|--------|-----------------------------------|
 | Frontend      | http://localhost:4200/                            | 4200   | Interfaz de Usuario (Angular)     |
 | Backend GATEWAY Swagger| http://localhost:5000/swagger/index.html       | 5000 / 5001 / 5002   | API                               |
-| PgAdmin      | Postgres SQL Manager                            | ----   | Panel de Gestión de Base de datos visual            |
+| PgAdmin      | Postgres SQL Manager                            | http://localhost:5050/   | Panel de Gestión de Base de datos visual            |
 | Databases Postgres      | localhost,5434:5432 / 5433:5432                                    | 5434 / 5433   | Postgres SQL 15                  |
 
 ----
