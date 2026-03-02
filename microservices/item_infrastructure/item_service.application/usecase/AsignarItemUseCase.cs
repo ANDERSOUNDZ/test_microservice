@@ -48,10 +48,17 @@ namespace item_service
 
             if (esUrgente)
             {
-                return candidatosNoSaturados.OrderBy(u => u.TotalPendientes).First().Username;
+  
+                return candidatosNoSaturados
+                    .OrderBy(u => u.TotalPendientes)
+                    .ThenBy(u => u.Username)
+                    .First().Username;
             }
-
-            return candidatosNoSaturados.OrderBy(u => u.TotalPendientes).First().Username;
+            return candidatosNoSaturados
+                .OrderBy(u => u.TotalPendientes >= 5) 
+                .ThenBy(u => u.TotalPendientes)
+                .ThenBy(u => u.Username)
+                .First().Username;
         }
     }
 }
