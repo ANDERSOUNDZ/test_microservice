@@ -1,0 +1,54 @@
+<div class="container mt-4">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Gestión de Usuarios</h2>
+        <span class="badge bg-secondary">Total: {{ userService.usuarios().length }}</span>
+      </div>
+      
+      <div class="card shadow-sm mb-5">
+        <div class="card-header bg-dark text-white">Registrar Nuevo Usuario</div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-md-5">
+              <label class="form-label">Username</label>
+              <input [(ngModel)]="form.username" class="form-control" placeholder="ej: jdoe">
+            </div>
+            <div class="col-md-5">
+              <label class="form-label">Nombre Completo</label>
+              <input [(ngModel)]="form.nombreCompleto" class="form-control" placeholder="Juan Pérez">
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+              <button (click)="guardar()" class="btn btn-success w-100" [disabled]="!form.username || !form.nombreCompleto">
+                Guardar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>Username (Referencia)</th>
+              <th>Nombre Completo</th>
+              <th class="text-center">Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (user of userService.usuarios(); track user.username) {
+              <tr>
+                <td class="fw-bold text-primary">{{ user.username }}</td>
+                <td>{{ user.nombreCompleto }}</td>
+                <td class="text-center">
+                  <span class="badge rounded-pill bg-success">Activo</span>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="3" class="text-center text-muted py-4">No hay usuarios registrados</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>

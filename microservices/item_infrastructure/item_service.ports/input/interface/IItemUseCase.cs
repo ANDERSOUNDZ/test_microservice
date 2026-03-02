@@ -5,8 +5,9 @@ namespace item_service
 {
     public partial interface IItemUseCase
     {
-        Task ExecuteAsync(CrearItemRequest request);
+        Task<string> ExecuteAsync(CrearItemRequest request);
         Task ExecuteAsync(CompletarItemRequest request);
         Task<List<ItemPendienteResponse>> ExecuteAsync(string username);
+        Task<List<ItemPendienteResponse>> ExecuteAsync();
     }
 }

@@ -13,7 +13,7 @@ namespace item_service
                 .OrderByDescending(x => x.EsAltaRelevancia)
                 .ThenBy(x => x.FechaEntrega)
                 .Select(x => new ItemPendienteResponse(
-                    x.Id, x.Titulo, x.FechaEntrega, x.EsAltaRelevancia, x.UsuarioAsignado))
+                    x.Id, x.Titulo, x.FechaEntrega.ToString("yyyy-MM-dd"), x.EsAltaRelevancia, x.UsuarioAsignado))
                 .ToList();
         }
     }

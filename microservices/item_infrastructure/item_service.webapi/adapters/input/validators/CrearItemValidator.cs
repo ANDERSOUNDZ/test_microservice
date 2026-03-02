@@ -7,8 +7,13 @@ namespace item_service.webapi.adapters.input.validators
     {
         public CrearItemValidator()
         {
-            RuleFor(x => x.Titulo).NotEmpty().WithMessage("El título es obligatorio.");
-            RuleFor(x => x.FechaEntrega).GreaterThan(DateTime.Now).WithMessage("La fecha debe ser futura.");
+            RuleFor(x => x.Titulo)
+                .NotEmpty().WithMessage("El título es obligatorio.")
+                .MaximumLength(100).WithMessage("El título es muy largo.");
+
+            RuleFor(x => x.FechaEntrega)
+                .GreaterThanOrEqualTo(DateTime.Today)
+                .WithMessage("La fecha no puede ser anterior a hoy.");
         }
     }
 }

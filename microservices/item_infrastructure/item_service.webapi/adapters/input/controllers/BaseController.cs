@@ -9,6 +9,9 @@ namespace item_service.webapi.adapters.input.controllers
     {
         protected IActionResult OkResponse<T>(T data, ApiMessage message = ApiMessage.OperationSuccess)
             => Ok(new ApiResponse<T>(true, message.GetMessage(), data, (int)message));
+
+        protected IActionResult OkResponse<T>(bool success, ApiMessage message, T data)
+            => Ok(new ApiResponse<T>(success, message.GetMessage(), data, (int)message));
         protected IActionResult BadRequestResponse(ApiMessage message = ApiMessage.BadRequest, object? errors = null)
             => BadRequest(new ApiResponse<object>(false, message.GetMessage(), errors, (int)message));
         protected IActionResult InternalErrorResponse(Exception? ex = null)

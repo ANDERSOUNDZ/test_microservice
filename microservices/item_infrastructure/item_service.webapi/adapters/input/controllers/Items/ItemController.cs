@@ -15,14 +15,40 @@ namespace item_service.webapi.adapters.input.controllers.Items
         {
             _executor = executor;
         }
+
+        [HttpGet("pendientes/{username}")]
+        public async Task<IActionResult> ListarPendientes(string username)
+        {
+            try
+            {
+                var data = await _executor.ExecuteAsync(username);
+                return OkResponse(data, ApiMessage.OperationSuccess);
+            }
+            catch (Exception ex)
+            {
+                return InternalErrorResponse(ex);
+            }
+        }
+
+        [HttpGet("listar-todo")]
+        public async Task<IActionResult> ListarTodo()
+        {
+            try
+            {
+                var data = await _executor.ExecuteAsync();
+                return OkResponse(data, ApiMessage.OperationSuccess);
+            }
+            catch (Exception ex) { return InternalErrorResponse(ex); }
+        }
+
         [HttpPost("asignar")]
         [ServiceFilter(typeof(ValidationFilter<CrearItemRequest>))]
         public async Task<IActionResult> CrearItem([FromBody] CrearItemRequest request)
         {
             try
             {
-                await _executor.ExecuteAsync(request);
-                return OkResponse(true, ApiMessage.OperationSuccess);
+                string asignado = await _executor.ExecuteAsync(request);
+                return OkResponse(true, ApiMessage.TaskSuccessfullyCompleted, asignado);
             }
             catch (Exception ex)
             {
@@ -43,20 +69,6 @@ namespace item_service.webapi.adapters.input.controllers.Items
             {
                 return InternalErrorResponse(ex);
             }
-        }
-
-        [HttpGet("pendientes/{username}")]
-        public async Task<IActionResult> ListarPendientes(string username)
-        {
-            try
-            {
-                var data = await _executor.ExecuteAsync(username);
-                return OkResponse(data, ApiMessage.OperationSuccess);
-            }
-            catch (Exception ex)
-            {
-                return InternalErrorResponse(ex);
-            }
-        }
+        }        
     }
 }

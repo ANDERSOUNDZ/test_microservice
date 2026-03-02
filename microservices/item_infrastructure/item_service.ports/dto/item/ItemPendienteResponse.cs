@@ -3,7 +3,7 @@
     public record ItemPendienteResponse(
         Guid Id,
         string Titulo,
-        DateTime FechaEntrega,
+        string FechaEntrega,
         bool EsAltaRelevancia,
         string UsuarioAsignado
     );

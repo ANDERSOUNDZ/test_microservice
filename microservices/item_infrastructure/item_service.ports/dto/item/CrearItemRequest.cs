@@ -1,5 +1,4 @@
-﻿
-namespace item_service.ports.dto.item
+﻿namespace item_service.ports.dto.item
 {
     public record CrearItemRequest(
         string Titulo,

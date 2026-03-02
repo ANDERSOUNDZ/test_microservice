@@ -13,7 +13,7 @@ namespace item_service.domain.configuration
 
             builder.Property(x => x.Titulo).IsRequired().HasMaxLength(200);
             builder.Property(x => x.Estado).IsRequired().HasDefaultValue("Pendiente");
-            builder.Property(x => x.UsuarioAsignado).IsRequired();
+            builder.Property(x => x.UsuarioAsignado).IsRequired().HasMaxLength(100);
         }
     }
 }

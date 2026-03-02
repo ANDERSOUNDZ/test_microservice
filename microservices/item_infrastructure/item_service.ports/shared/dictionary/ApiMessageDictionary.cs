@@ -10,6 +10,7 @@ namespace item_service.ports.shared.dictionary
             { ApiMessage.OperationSuccess, "Operación realizada con éxito" },
             { ApiMessage.ValidationError, "Error de validación" },
             { ApiMessage.InternalServerError, "Error interno del servidor" },
+            { ApiMessage.TaskSuccessfullyCompleted, "Tarea completada exitosamente" }
         };
         public static string GetMessage(this ApiMessage message)
         {

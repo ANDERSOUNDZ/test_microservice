@@ -1,0 +1,151 @@
+<div class="container mt-4">
+  <div class="d-flex align-items-center mb-4">
+    <h2 class="text-primary m-0">
+      <i class="bi bi-cpu-fill me-2"></i>Panel de Distribución Automática de Tareas
+    </h2>
+  </div>
+
+  <div class="card shadow-sm border-0 mb-5 bg-white">
+    <div class="card-header bg-primary text-white fw-bold">
+      <i class="bi bi-plus-circle me-2"></i>Registrar Nueva Tarea para el Equipo
+    </div>
+    <div class="card-body p-4">
+      <div class="row g-3 align-items-end">
+        <div class="col-md-5">
+          <label class="form-label fw-bold text-muted small">Título de la Tarea</label>
+          <input
+            [(ngModel)]="nuevoItem.titulo"
+            class="form-control form-control-lg"
+            placeholder="Ej: Revisar auditoría interna..."
+          />
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label fw-bold text-muted small">Fecha Límite</label>
+          <input
+            type="date"
+            [(ngModel)]="nuevoItem.fechaEntrega"
+            class="form-control form-control-lg"
+          />
+        </div>
+
+        <div class="col-md-2">
+          <label class="form-label fw-bold text-muted small">Prioridad</label>
+          <select [(ngModel)]="nuevoItem.esAltaRelevancia" class="form-select form-select-lg">
+            <option [ngValue]="true">ALTA PRIORIDAD</option>
+            <option [ngValue]="false">BAJA PRIORIDAD</option>
+          </select>
+        </div>
+
+        <div class="col-md-2">
+          <button (click)="guardar()" class="btn btn-primary btn-lg w-100 shadow-sm fw-bold">
+            Distribuir <i class="bi bi-arrow-right-short"></i>
+          </button>
+        </div>
+      </div>
+      <div class="mt-3 p-2 bg-light rounded border-start border-4 border-info">
+        <small class="text-dark">
+          <strong>Regla de negocio:</strong> Si faltan menos de 3 días, se ignora la relevancia y se
+          busca al menos cargado. Usuarios con <strong>+3 tareas ALTA</strong> no recibirán
+          asignaciones.
+        </small>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-3 align-items-center">
+    <div class="col-md-8">
+      <h4 class="m-0 text-secondary">Monitor de Carga de Trabajo</h4>
+    </div>
+    <div class="col-md-4 text-end">
+      <div class="input-group">
+        <span class="input-group-text bg-white"><i class="bi bi-funnel">Buscar Tarea</i></span>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Filtrar por tarea o usuario..."
+          [ngModel]="filtroBusqueda()"
+          (ngModelChange)="filtroBusqueda.set($event); paginaActual.set(1)"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="table-responsive rounded-3 shadow-sm bg-white">
+    <table class="table table-hover align-middle m-0">
+      <thead class="table-light">
+        <tr>
+          <th class="ps-4">Ítem de Trabajo</th>
+          <th>Responsable Asignado</th>
+          <th>Vencimiento</th>
+          <th>Prioridad</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of itemsFiltrados(); track item.id) {
+          <tr>
+            <td class="ps-4 py-3">
+              <div class="fw-bold">{{ item.titulo }}</div>
+              <small class="text-muted">ID: {{ item.id.substring(0, 8) }}...</small>
+            </td>
+            <td>
+              <span
+                class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2"
+              >
+                <i class="bi bi-person-circle me-1"></i> {{ item.usuarioAsignado }}
+              </span>
+            </td>
+            <td>
+              <div [class.text-danger]="item.esAltaRelevancia" class="fw-semibold">
+                {{ item.fechaEntrega | date: 'fullDate' }}
+              </div>
+            </td>
+            <td>
+              <span [class]="item.esAltaRelevancia ? 'badge bg-danger' : 'badge bg-info'">
+                {{ item.esAltaRelevancia ? 'ALTA' : 'BAJA' }}
+              </span>
+            </td>
+            <td>
+              <button
+                (click)="completar(item.id)"
+                class="btn btn-sm btn-outline-success border-2 fw-bold"
+              >
+                <i class="bi bi-check-lg"></i> Finalizar
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="4" class="text-center py-5">
+              <i class="bi bi-clipboard-x fs-1 text-muted d-block mb-3"></i>
+              <p class="text-muted h5">No hay tareas registradas en el sistema</p>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  @if (totalPaginas() > 1) {
+    <div class="d-flex justify-content-center mt-4">
+      <nav aria-label="Navegacion">
+        <ul class="pagination">
+          <li class="page-item" [class.disabled]="paginaActual() === 1">
+            <button class="page-link px-4" (click)="cambiarPagina(paginaActual() - 1)">
+              Anterior
+            </button>
+          </li>
+          <li class="page-item active">
+            <span class="page-link">Página {{ paginaActual() }} de {{ totalPaginas() }}</span>
+          </li>
+          <li class="page-item" [class.disabled]="paginaActual() === totalPaginas()">
+            <button class="page-link px-4" (click)="cambiarPagina(paginaActual() + 1)">
+              Siguiente
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  }
+</div>

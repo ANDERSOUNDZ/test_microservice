@@ -1,49 +1,37 @@
 services:
-  # Base de Datos para Usuarios
   db-users:
     image: postgres:15
     container_name: postgres_users
+    command: ["postgres", "-c", "fsync=off", "-c", "full_page_writes=off"]
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: "root123*"
       POSTGRES_DB: user_db
     ports:
-      - "5433:5432" # Puerto diferente para acceso local
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d user_db"]
-      interval: 5s
-      retries: 5
+      - "5433:5432"
+    deploy:
+      resources:
+        limits:
+          memory: 256M
     volumes:
       - users_data:/var/lib/postgresql/data
 
-  # Base de Datos para Items
   db-items:
     image: postgres:15
     container_name: postgres_items
+    command: ["postgres", "-c", "fsync=off", "-c", "full_page_writes=off"]
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: "root123*"
       POSTGRES_DB: item_db
     ports:
-      - "5434:5432" # Puerto diferente para acceso local
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d item_db"]
-      interval: 5s
-      retries: 5
+      - "5434:5432"
+    deploy:
+      resources:
+        limits:
+          memory: 256M
     volumes:
       - items_data:/var/lib/postgresql/data
-
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin_container
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: admin
-    ports:
-      - "5050:80"
-    depends_on:
-      - db-users
-      - db-items
 
   user-service:
     build: 
@@ -56,8 +44,7 @@ services:
     ports:
       - "5001:8080"
     depends_on:
-      db-users:
-        condition: service_healthy
+      - db-users
 
   item-service:
     build: 
@@ -70,8 +57,7 @@ services:
     ports:
       - "5002:8080"
     depends_on:
-      db-items:
-        condition: service_healthy
+      - db-items
 
   api-gateway:
     build:
@@ -97,6 +83,22 @@ services:
       - "4200:80"
     depends_on:
       - api-gateway
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_container
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - db-users
+      - db-items
+    deploy:
+      resources:
+        limits:
+          memory: 300M
 
 volumes:
   users_data:

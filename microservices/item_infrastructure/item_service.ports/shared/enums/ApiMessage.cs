@@ -6,5 +6,6 @@
         OperationSuccess = 2,        
         ValidationError = 3,
         InternalServerError = 4,
+        TaskSuccessfullyCompleted = 5,
     }
 }

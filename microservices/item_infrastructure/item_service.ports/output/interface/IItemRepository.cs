@@ -9,6 +9,7 @@ namespace item_service
         Task<ItemTrabajoEntity?> ObtenerPorIdAsync(Guid id);
         Task<List<ResumenUsuario>> ObtenerCargaTrabajoUsuariosAsync();
         Task<List<ItemTrabajoEntity>> ObtenerPendientesPorUsuarioAsync(string username);
+        Task<List<ItemTrabajoEntity>> ObtenerTodosAsync();
         Task ActualizarItemAsync(ItemTrabajoEntity item);
         Task GuardarItemAsync(ItemTrabajoEntity item);
     }
