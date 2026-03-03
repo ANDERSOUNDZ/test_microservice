@@ -4,6 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { UserService } from '../../../core/services/user.service';
 import { UsuarioResponse } from '../../../core/models/user.model';
 
+/**
+ * Componente para la gestión de usuarios del sistema.
+ * Permite el registro, edición y eliminación de usuarios con validaciones de integridad.
+ */
 @Component({
   selector: 'app-users.component',
   imports: [CommonModule, FormsModule],
@@ -18,10 +22,16 @@ export class UsersComponent implements OnInit {
     nombreCompleto: '',
   };
 
+  /**
+   * Al iniciar, recupera la lista actualizada de usuarios.
+   */
   ngOnInit() {
     this.userService.listar();
   }
 
+  /**
+   * Registra un nuevo usuario en la base de datos.
+   */
   guardar() {
     this.userService.registrar(this.form).subscribe({
       next: () => {
@@ -30,6 +40,11 @@ export class UsersComponent implements OnInit {
     });
   }
 
+  /**
+   * Solicita la eliminación de un usuario.
+   * El Backend validará si el usuario posee tareas asignadas antes de proceder.
+   * @param username Identificador del usuario a eliminar.
+   */
   eliminar(username: string) {
     if (
       confirm(
@@ -40,6 +55,10 @@ export class UsersComponent implements OnInit {
     }
   }
 
+  /**
+   * Permite la edición rápida del nombre completo de un usuario.
+   * @param user Objeto con la información actual del usuario.
+   */
   editar(user: UsuarioResponse) {
     const nuevoNombre = prompt(`Editar nombre para ${user.username}:`, user.nombreCompleto);
     if (nuevoNombre && nuevoNombre.trim() !== '' && nuevoNombre !== user.nombreCompleto) {

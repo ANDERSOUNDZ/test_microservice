@@ -16,12 +16,20 @@ export class UserService {
 
   usuarios = signal<UsuarioResponse[]>([]);
 
+  /**
+   * Recupera el listado de usuarios del microservicio correspondiente.
+   */
   listar() {
     this.http.get<ApiResponse<UsuarioResponse[]>>(`${this.baseUrl}/listar`).subscribe((res) => {
       if (res.success) this.usuarios.set(res.data);
     });
   }
 
+  /**
+   * Registra un nuevo usuario en el sistema.
+   * En caso de éxito, dispara una notificación y actualiza el listado local.
+   * @param request Datos del nuevo usuario (username y nombre).
+   */
   registrar(request: { username: string; nombreCompleto: string }) {
     return this.http.post<ApiResponse<any>>(`${this.baseUrl}/registrar`, request).pipe(
       tap((res) => {
@@ -31,6 +39,10 @@ export class UserService {
     );
   }
 
+  /**
+   * Actualiza la información de un usuario existente.
+   * @param request Objeto con el username actual y el nuevo nombre a asignar.
+   */
   editar(request: { username: string; nuevoNombre: string }) {
     return this.http.put<ApiResponse<any>>(`${this.baseUrl}/editar`, request).pipe(
       tap((res) => {
@@ -40,6 +52,10 @@ export class UserService {
     );
   }
 
+  /**
+   * Elimina un usuario y maneja errores de integridad (ej: usuario con tareas).
+   * @param username Identificador único del usuario.
+   */
   eliminar(username: string) {
     return this.http.delete<ApiResponse<any>>(`${this.baseUrl}/eliminar/${username}`).pipe(
       tap({
