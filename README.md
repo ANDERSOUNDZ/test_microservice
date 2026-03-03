@@ -37,6 +37,22 @@ Backend / Hexagonal Architecture / Microservicios
 ![A04](./angular_frontend/public/images/C4.png)
 ---
 
+El proyecto ha sido optimizado para cumplir con altos estándares de mantenibilidad y escalabilidad, alineados con métricas de análisis estático (**SonarQube / Clean Code**):
+
+### Patrones de Diseño y Arquitectura
+* **Hexagonal Architecture (Ports & Adapters):** Desacoplamiento total entre la lógica de negocio y la infraestructura (Base de Datos, APIs Externas).
+* **Composition Root & Method Extensions:** Se modularizó la inyección de dependencias en el Host mediante métodos de extensión (`AddRepositories`, `AddUseCases`, `AddExternalClients`), facilitando la escalabilidad sin ensuciar el `Program.cs`.
+* **Partial Classes para DI:** Uso de clases parciales para separar los constructores (gestión de dependencias) de los métodos de lógica, mejorando la legibilidad y mantenibilidad.
+
+### Robustez y Resiliencia
+* **Fault Tolerance:** Implementación de políticas de reintento (`EnableRetryOnFailure`) en PostgreSQL para manejar fallos temporales de conexión en entornos Dockerizados.
+* **Validación de Capas:** Uso de **FluentValidation** y **ValidationFilters** para asegurar la integridad de los datos antes de que lleguen a la capa de aplicación.
+* **Typed HttpClients:** Comunicación entre microservicios mediante clientes HTTP tipados y resilientes, evitando el acoplamiento directo y facilitando las pruebas unitarias.
+
+### Documentación Técnica (SonarQube Compliance)
+* **XML Documentation:** El 100% de los Puertos (Interfaces), Casos de Uso y Controladores cuentan con comentarios técnicos `/// <summary>`, garantizando una alta densidad de documentación y facilitando la transferencia de conocimiento.
+* **API Gateway & Aggregated Swagger:** Centralización de la documentación de todos los microservicios a través de un único punto de entrada (Gateway) utilizando **YARP (Yet Another Reverse Proxy)**.
+
 ## Instrucciones de Ejecución
 
 Ingresar a CMD / Powershell / terminal linux / bash :
@@ -204,7 +220,16 @@ Validaciones:
 ---
 Funcionalidades Backend
 
-- Arquitectura hexagonal, Puertos, Adaptadores, Use Case, Repositories, Fluent Validation, SOLID, Partial Clases, Injection dependency.
+- El proyecto utiliza una Arquitectura Hexagonal (Ports & Adapters) para garantizar la escalabilidad y el desacoplamiento:
+
+Domain: Contiene la lógica de negocio pura y entidades.
+
+Application: Casos de uso y orquestación.
+
+Ports: Interfaces para la comunicación interna/externa.
+
+Infrastructure (Data/WebAPI): Implementaciones técnicas (Base de datos y Controladores REST).
+
 
 ![2AB](./angular_frontend/public/images/C23.png)
 

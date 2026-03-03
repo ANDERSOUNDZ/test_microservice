@@ -2,8 +2,15 @@
 
 namespace gateway_service.host
 {
+    /// <summary>
+    /// Extensiones para la configuración del host del Gateway.
+    /// Centraliza la seguridad, el proxy y la agregación de Swagger.
+    /// </summary>
     public static class HostExtensions
     {
+        /// <summary>
+        /// Registra los servicios de infraestructura para el Gateway, incluyendo Proxy y CORS.
+        /// </summary>
         public static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder builder)
         {
             var services = builder.Services;
@@ -15,6 +22,9 @@ namespace gateway_service.host
             return builder;
         }
 
+        /// <summary>
+        /// Configura el pipeline de ejecución, integrando las políticas de CORS y el mapeo del Proxy.
+        /// </summary>
         public static WebApplication UseHexagonal(this WebApplication app)
         {
             var corsPolicyName = app.Services.GetRequiredService<string>();
