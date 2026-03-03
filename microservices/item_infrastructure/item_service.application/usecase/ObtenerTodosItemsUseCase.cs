@@ -4,6 +4,9 @@ namespace item_service
 {
     public partial class ItemUseCase : IItemUseCase
     {
+        /// <summary>
+        /// Obtiene el histórico total de tareas en el sistema.
+        /// </summary>
         public async Task<List<ItemPendienteResponse>> ExecuteAsync()
         {
             var items = await _itemRepository.ObtenerTodosAsync();

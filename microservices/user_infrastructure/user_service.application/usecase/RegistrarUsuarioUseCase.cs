@@ -5,6 +5,11 @@ namespace user_service
 {
     public partial class UserUseCase : IUserUseCase
     {
+        /// <summary>
+        /// Orquesta la creación de un nuevo usuario en el sistema.
+        /// Valida la unicidad del Username antes de persistir.
+        /// </summary>
+        /// <param name="request">DTO con los datos del nuevo usuario.</param>
         public async Task ExecuteAsync(CrearUsuarioRequest request)
         {
             if (await _userRepository.ExisteUsernameAsync(request.Username))

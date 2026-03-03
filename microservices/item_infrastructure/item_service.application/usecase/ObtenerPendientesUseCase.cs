@@ -5,6 +5,9 @@ namespace item_service
 {
     public partial class ItemUseCase : IItemUseCase
     {
+        /// <summary>
+        /// Obtiene las tareas pendientes de un usuario específico, ordenadas por prioridad.
+        /// </summary>
         public async Task<List<ItemPendienteResponse>> ExecuteAsync(string username)
         {
             var lista = await _itemRepository.ObtenerPendientesPorUsuarioAsync(username);

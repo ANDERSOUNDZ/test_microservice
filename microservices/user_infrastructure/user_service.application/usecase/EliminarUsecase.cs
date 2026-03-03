@@ -2,6 +2,11 @@
 {
     public partial class UserUseCase : IUserUseCase
     {
+        /// <summary>
+        /// Elimina un usuario previa verificación de integridad referencial 
+        /// consultando al microservicio de Ítems vía HttpClient.
+        /// </summary>
+        /// <param name="username">Nombre de usuario a eliminar.</param>
         public async Task ExecuteAsync(string username)
         {
             var usuario = await _userRepository.ObtenerPorUsernameAsync(username);
